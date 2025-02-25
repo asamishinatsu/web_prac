@@ -133,12 +133,13 @@ INSERT INTO book_genres (book_id, genre_id) VALUES
     (4, 4), -- Основание -> Фантастика
     (5, 5); -- Краткая история времени -> Научная литература
 
-INSERT INTO customers (full_name, email, phone, address) VALUES 
-    ('Иван Иванов', 'ivan@example.com', '+79991234567', 'Москва, ул. Ленина, 1'),
-    ('Мария Петрова', 'maria@example.com', '+79997654321', 'Санкт-Петербург, Невский пр., 10'),
-    ('Алексей Смирнов', 'alex@example.com', '+79161234567', 'Казань, ул. Кремлевская, 5'),
-    ('Ольга Кузнецова', 'olga@example.com', '+79161239876', 'Екатеринбург, ул. Мира, 3'),
-    ('Сергей Волков', 'sergey@example.com', '+79161239999', 'Новосибирск, ул. Советская, 7');
+INSERT INTO customers (username, password, full_name, email, phone, address) VALUES 
+    ('ivan', '$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Иван Иванов', 'ivan@example.com', '+79991234567', 'Москва, ул. Ленина, 1'),
+    ('maria', '$2b$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'Мария Петрова', 'maria@example.com', '+79997654321', 'Санкт-Петербург, Невский пр., 10'),
+    ('alex', '$2b$10$ccccccccccccccccccccccccccccccccccccccccccccccccc', 'Алексей Смирнов', 'alex@example.com', '+79161234567', 'Казань, ул. Кремлевская, 5'),
+    ('olga', '$2b$10$ddddddddddddddddddddddddddddddddddddddddddddddddd', 'Ольга Кузнецова', 'olga@example.com', '+79161239876', 'Екатеринбург, ул. Мира, 3'),
+    ('sergey', '$2b$10$eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'Сергей Волков', 'sergey@example.com', '+79161239999', 'Новосибирск, ул. Советская, 7');
+
 
 INSERT INTO orders (customer_id, order_date, total_price, delivery_address, delivery_time, status) VALUES 
     (1, '2025-03-01 10:00:00', 500.00, 'Москва, ул. Ленина, 1', NULL, 'В обработке'),
