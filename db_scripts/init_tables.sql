@@ -1,12 +1,13 @@
-DROP TABLE IF EXISTS order_items;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS customers;
-DROP TABLE IF EXISTS book_authors;
-DROP TABLE IF EXISTS books;
-DROP TABLE IF EXISTS authors;
-DROP TABLE IF EXISTS genres;
-DROP TYPE IF EXISTS cover_enum;
-DROP TYPE IF EXISTS order_status_enum;
+DROP TABLE IF EXISTS order_items RESTRICT;
+DROP TABLE IF EXISTS orders RESTRICT;
+DROP TABLE IF EXISTS customers RESTRICT;
+DROP TABLE IF EXISTS book_authors RESTRICT;
+DROP TABLE IF EXISTS book_genres RESTRICT;
+DROP TABLE IF EXISTS books RESTRICT;
+DROP TABLE IF EXISTS authors RESTRICT;
+DROP TABLE IF EXISTS genres RESTRICT;
+DROP TYPE IF EXISTS cover_enum RESTRICT;
+DROP TYPE IF EXISTS order_status_enum RESTRICT;
 
 ----------------------------------------------------
 -- 1. Создание ENUM типов
@@ -133,7 +134,7 @@ INSERT INTO book_genres (book_id, genre_id) VALUES
     (4, 4), -- Основание -> Фантастика
     (5, 5); -- Краткая история времени -> Научная литература
 
-INSERT INTO customers (username, password, full_name, email, phone, address) VALUES 
+INSERT INTO customers (username, pwd_hash, full_name, email, phone, address) VALUES
     ('ivan', '$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Иван Иванов', 'ivan@example.com', '+79991234567', 'Москва, ул. Ленина, 1'),
     ('maria', '$2b$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'Мария Петрова', 'maria@example.com', '+79997654321', 'Санкт-Петербург, Невский пр., 10'),
     ('alex', '$2b$10$ccccccccccccccccccccccccccccccccccccccccccccccccc', 'Алексей Смирнов', 'alex@example.com', '+79161234567', 'Казань, ул. Кремлевская, 5'),
