@@ -6,18 +6,26 @@ DROP TABLE IF EXISTS book_genres RESTRICT;
 DROP TABLE IF EXISTS books RESTRICT;
 DROP TABLE IF EXISTS authors RESTRICT;
 DROP TABLE IF EXISTS genres RESTRICT;
-DROP TYPE IF EXISTS cover_enum RESTRICT;
-DROP TYPE IF EXISTS order_status_enum RESTRICT;
+DROP TYPE IF EXISTS cover_t RESTRICT;
+DROP TYPE IF EXISTS status_t RESTRICT;
 
 ----------------------------------------------------
 -- 1. Создание ENUM типов
 ----------------------------------------------------
 
 -- Тип для вида обложки
-CREATE TYPE cover_t AS ENUM ('Твердая', 'Мягкая');
+CREATE TYPE cover_t AS ENUM (
+    'Hard',
+    'Soft'
+);
 
 -- Тип для статуса заказа
-CREATE TYPE status_t AS ENUM ('В обработке', 'Принят', 'Доставлен', 'Отменён');
+CREATE TYPE status_t AS ENUM (
+    'Processing',
+    'Accepted',
+    'Delivered',
+    'Cancelled'
+);
 
 ----------------------------------------------------
 -- 2. Создание таблиц
@@ -79,7 +87,7 @@ CREATE TABLE orders (
     total_price 		DECIMAL(10,2) NOT NULL,
     delivery_address 	TEXT NOT NULL,
     delivery_time 		TIMESTAMP,
-    status 				status_t DEFAULT 'В обработке',
+    status 				status_t NOT NULL DEFAULT 'Processing',
 	
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
@@ -114,11 +122,11 @@ INSERT INTO authors (name) VALUES
     ('Стивен Хокинг');
 
 INSERT INTO books (title, publisher, year_of_publication, pages, cover_type, price, stock) VALUES 
-    ('1984', 'Союз', 1949, 328, 'Твердая', 500.00, 10),
-    ('Мастер и Маргарита', 'Азбука', 1966, 480, 'Мягкая', 450.00, 5),
-    ('Приключения Шерлока Холмса', 'Penguin', 1892, 256, 'Твердая', 300.00, 7),
-    ('Основание', 'HarperCollins', 1951, 255, 'Мягкая', 400.00, 12),
-    ('Краткая история времени', 'Bantam Books', 1988, 212, 'Твердая', 350.00, 8);
+    ('1984', 'Союз', 1949, 328, 'Hard', 500.00, 10),
+    ('Мастер и Маргарита', 'Азбука', 1966, 480, 'Soft', 450.00, 5),
+    ('Приключения Шерлока Холмса', 'Penguin', 1892, 256, 'Hard', 300.00, 7),
+    ('Основание', 'HarperCollins', 1951, 255, 'Soft', 400.00, 12),
+    ('Краткая история времени', 'Bantam Books', 1988, 212, 'Hard', 350.00, 8);
 
 INSERT INTO book_authors (book_id, author_id) VALUES 
     (1, 1), -- 1984 -> Джордж Оруэлл
@@ -143,11 +151,11 @@ INSERT INTO customers (username, pwd_hash, full_name, email, phone, address) VAL
 
 
 INSERT INTO orders (customer_id, order_date, total_price, delivery_address, delivery_time, status) VALUES 
-    (1, '2025-03-01 10:00:00', 500.00, 'Москва, ул. Ленина, 1', NULL, 'В обработке'),
-    (2, '2025-03-02 11:00:00', 450.00, 'Санкт-Петербург, Невский пр., 10', NULL, 'Принят'),
-    (3, '2025-03-03 12:00:00', 300.00, 'Казань, ул. Кремлевская, 5', '2025-03-04 16:00:00', 'Доставлен'),
-    (4, '2025-03-04 13:00:00', 1000000.00, 'Екатеринбург, ул. Мира, 3', NULL, 'Отменён'),
-    (5, '2025-03-05 14:00:00', 350.00, 'Новосибирск, ул. Советская, 7', NULL, 'Принят');
+    (1, '2025-03-01 10:00:00', 500.00, 'Москва, ул. Ленина, 1', NULL, 'Processing'),
+    (2, '2025-03-02 11:00:00', 450.00, 'Санкт-Петербург, Невский пр., 10', NULL, 'Accepted'),
+    (3, '2025-03-03 12:00:00', 300.00, 'Казань, ул. Кремлевская, 5', '2025-03-04 16:00:00', 'Delivered'),
+    (4, '2025-03-04 13:00:00', 1000000.00, 'Екатеринбург, ул. Мира, 3', NULL, 'Cancelled'),
+    (5, '2025-03-05 14:00:00', 350.00, 'Новосибирск, ул. Советская, 7', NULL, 'Accepted');
 
 INSERT INTO order_items (order_id, book_id, quantity, price) VALUES 
     (1, 1, 1, 500.00),

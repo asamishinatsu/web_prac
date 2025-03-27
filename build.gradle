@@ -1,0 +1,45 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'ru.msu.cmc'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework:spring-orm:5.3.17'
+	implementation 'org.projectlombok:lombok:1.18.22'
+	implementation 'org.hibernate:hibernate-core:5.6.7.Final'
+	implementation 'org.postgresql:postgresql:42.3.3'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.thymeleaf:thymeleaf:3.1.0.M1'
+	implementation 'org.thymeleaf:thymeleaf-spring5:3.1.0.M1'
+	implementation 'org.seleniumhq.selenium:selenium-java'
+	implementation 'org.testng:testng:7.1.0'
+
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.hibernate:hibernate-core:5.6.7.Final'
+	testImplementation 'org.postgresql:postgresql:42.3.3'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
