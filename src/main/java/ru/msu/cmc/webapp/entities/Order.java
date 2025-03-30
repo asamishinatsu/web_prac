@@ -1,7 +1,6 @@
 package ru.msu.cmc.webapp.entities;
 
 import lombok.*;
-import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

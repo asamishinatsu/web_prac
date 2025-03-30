@@ -2,7 +2,6 @@ package ru.msu.cmc.webapp.entities;
 
 import lombok.*;
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,10 +26,10 @@ public class Customer implements CommonEntity<Long> {
     private String passwordHash;
 
     @Column(name = "full_name", nullable = false)
-    private Long year;
+    private String fullName;
 
     @Column(name = "email", nullable = false)
-    private Long pages;
+    private String email;
 
     @Column(name = "phone")
     private String phone;
