@@ -96,7 +96,7 @@ public class BookDAOImpl extends CommonDAOImpl<Book, Long> implements BookDAO {
             }
 
             if (filter.getCoverType() != null) {
-                predicates.add(cb.equal(root.get("coverType"), filter.getPublisher()));
+                predicates.add(cb.equal(root.get("cover"), filter.getCoverType()));
             }
 
             query.select(root).where(predicates.toArray(new Predicate[0])).distinct(true);

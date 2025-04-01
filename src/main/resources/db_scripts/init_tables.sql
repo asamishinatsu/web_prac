@@ -52,6 +52,8 @@ CREATE TABLE books (
     stock 					INT NOT NULL CHECK (stock >= 0)
 );
 
+ALTER TABLE books ALTER COLUMN cover_type TYPE varchar USING cover_type::text;
+
 CREATE TABLE book_authors (
     book_id 	INT NOT NULL,
     author_id 	INT NOT NULL,
@@ -91,6 +93,8 @@ CREATE TABLE orders (
 	
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
+
+ALTER TABLE orders ALTER COLUMN status TYPE varchar USING status::text;
 
 CREATE TABLE order_items (
     order_id 	INT NOT NULL,

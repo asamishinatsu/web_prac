@@ -44,7 +44,7 @@ public class CustomerDAOImpl extends CommonDAOImpl<Customer, Long> implements Cu
         try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session
                     .createQuery("FROM Customer WHERE fullName LIKE :gotFullName", Customer.class)
-                    .setParameter("gotFullName", fullName);
+                    .setParameter("gotFullName", likeExpr(fullName));
             return !query.getResultList().isEmpty() ? query.getResultList() : Collections.emptyList();
         }
     }

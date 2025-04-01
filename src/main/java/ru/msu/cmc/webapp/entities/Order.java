@@ -35,7 +35,6 @@ public class Order implements CommonEntity<Long> {
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "delivery_time")
     private LocalTime deliveryTime;
 
@@ -45,7 +44,7 @@ public class Order implements CommonEntity<Long> {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<Book> orderBookList;
+    private List<OrderBook> orderBookList;
 
     @Override
     public boolean equals(Object o) {
