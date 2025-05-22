@@ -147,7 +147,7 @@ INSERT INTO book_genres (book_id, genre_id) VALUES
     (5, 5); -- Краткая история времени -> Научная литература
 
 INSERT INTO customers (username, pwd_hash, full_name, email, phone, address) VALUES
-    ('ivan', '$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Иван Иванов', 'ivan@example.com', '+79991234567', 'Москва, ул. Ленина, 1'),
+    ('ivan', 'qwerty', 'Иван Иванов', 'ivan@example.com', '+79991234567', 'Москва, ул. Ленина, 1'),
     ('maria', '$2b$10$bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'Мария Петрова', 'maria@example.com', '+79997654321', 'Санкт-Петербург, Невский пр., 10'),
     ('alex', '$2b$10$ccccccccccccccccccccccccccccccccccccccccccccccccc', 'Алексей Смирнов', 'alex@example.com', '+79161234567', 'Казань, ул. Кремлевская, 5'),
     ('olga', '$2b$10$ddddddddddddddddddddddddddddddddddddddddddddddddd', 'Ольга Кузнецова', 'olga@example.com', '+79161239876', 'Екатеринбург, ул. Мира, 3'),
