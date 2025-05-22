@@ -3,8 +3,10 @@ package ru.msu.cmc.webapp.entities;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -42,13 +44,13 @@ public class Book implements CommonEntity<Long> {
     @Column(name = "stock", nullable = false)
     private Long stock;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private List<BookGenre> bookGenreList;
+    private Set<BookGenre> bookGenreList = new HashSet<>();
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private List<BookAuthor> bookAuthorList;
+    private Set<BookAuthor> bookAuthorList = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

@@ -15,13 +15,13 @@ public class BookAuthor {
     @EmbeddedId
     private BookAuthorId id = new BookAuthorId();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("bookId")
     @JoinColumn(name = "book_id", nullable = false)
     @ToString.Exclude
     private Book book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("authorId")
     @JoinColumn(name = "author_id", nullable = false)
     @ToString.Exclude

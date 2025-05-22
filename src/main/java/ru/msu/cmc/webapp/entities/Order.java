@@ -4,7 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,12 +23,12 @@ public class Order implements CommonEntity<Long> {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", nullable = false, referencedColumnName = "id")
     private Customer customer;
 
     @Column(name = "order_date", nullable = false)
-    private LocalTime orderDate;
+    private LocalDateTime orderDate;
 
     @Column(name = "total_price", precision = 10, scale = 2, nullable = false)
     private BigDecimal totalPrice;
@@ -36,15 +37,15 @@ public class Order implements CommonEntity<Long> {
     private String deliveryAddress;
 
     @Column(name = "delivery_time")
-    private LocalTime deliveryTime;
+    private LocalDateTime deliveryTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatusType status = StatusType.Processing;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
-    private List<OrderBook> orderBookList;
+    private List<OrderBook> orderBookList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

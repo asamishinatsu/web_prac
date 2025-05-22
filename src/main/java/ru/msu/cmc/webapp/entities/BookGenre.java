@@ -15,13 +15,13 @@ public class BookGenre {
     @EmbeddedId
     private BookGenreId id = new BookGenreId();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("bookId")
     @JoinColumn(name = "book_id", nullable = false)
     @ToString.Exclude
     private Book book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("genreId")
     @JoinColumn(name = "genre_id", nullable = false)
     @ToString.Exclude

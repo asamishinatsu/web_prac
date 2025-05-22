@@ -1,6 +1,5 @@
 package ru.msu.cmc.webapp.entities;
 
-import com.google.common.primitives.UnsignedLong;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -17,20 +16,20 @@ public class OrderBook {
     @EmbeddedId
     private OrderBookId id = new OrderBookId();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("orderId")
     @JoinColumn(name = "order_id", nullable = false)
     @ToString.Exclude
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("bookId")
     @JoinColumn(name = "book_id", nullable = false)
     @ToString.Exclude
     private Book book;
 
     @Column(name = "quantity", nullable = false)
-    private UnsignedLong quantity;
+    private Long quantity;
 
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal price;

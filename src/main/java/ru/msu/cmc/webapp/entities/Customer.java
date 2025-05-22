@@ -37,7 +37,7 @@ public class Customer implements CommonEntity<Long> {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<Order> orderList;
 

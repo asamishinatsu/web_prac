@@ -2,6 +2,7 @@ package ru.msu.cmc.webapp.DAO;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import ru.msu.cmc.webapp.entities.Author;
 import ru.msu.cmc.webapp.entities.CoverType;
 import ru.msu.cmc.webapp.entities.Genre;
@@ -17,9 +18,11 @@ public interface BookDAO extends CommonDAO<Book, Long> {
 
     @Builder
     @Getter
+    @Setter
     class Filter {
-        private Long authorId;
-        private Long genreId;
+        private String titleQuery;
+        private String authorQuery;
+        private String genreQuery;
         private String publisher;
         private Long year;
         private Long pagesMin, pagesMax;

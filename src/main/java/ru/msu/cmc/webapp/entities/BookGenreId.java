@@ -1,7 +1,8 @@
 package ru.msu.cmc.webapp.entities;
 
 import lombok.*;
-import javax.persistence.*;
+
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable

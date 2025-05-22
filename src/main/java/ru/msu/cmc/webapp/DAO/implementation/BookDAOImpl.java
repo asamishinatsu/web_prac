@@ -10,9 +10,7 @@ import ru.msu.cmc.webapp.DAO.BookDAO;
 import ru.msu.cmc.webapp.entities.*;
 
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class BookDAOImpl extends CommonDAOImpl<Book, Long> implements BookDAO {
@@ -56,52 +54,72 @@ public class BookDAOImpl extends CommonDAOImpl<Book, Long> implements BookDAO {
     @Override
     public List<Book> getAllBookByFilter(Filter filter) {
         try (Session session = sessionFactory.openSession()) {
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Book> query = cb.createQuery(Book.class);
-            Root<Book> root = query.from(Book.class);
+            StringBuilder hql = new StringBuilder("SELECT DISTINCT b FROM Book b LEFT JOIN b.bookAuthorList ba LEFT JOIN ba.author a LEFT JOIN b.bookGenreList bg LEFT JOIN bg.genre g");
+            List<String> conditions = new ArrayList<>();
+            Map<String, Object> parameters = new HashMap<>();
 
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (filter.getAuthorId() != null) {
-                Join<Book, BookAuthor> bookAuthorJoin = root.join("bookAuthorList");
-                Join<BookAuthor, Author> authorJoin = bookAuthorJoin.join("author");
-                predicates.add(cb.equal(authorJoin.get("id"), filter.getAuthorId()));
+            List<String> orConditions = new ArrayList<>();
+            if (filter.getTitleQuery() != null && !filter.getTitleQuery().trim().isEmpty()) {
+                orConditions.add("lower(b.title) LIKE lower(:titleQueryParam)");
+                parameters.put("titleQueryParam", likeExpr(filter.getTitleQuery()));
+            }
+            if (filter.getAuthorQuery() != null && !filter.getAuthorQuery().trim().isEmpty()) {
+                orConditions.add("lower(a.name) LIKE lower(:authorQueryParam)");
+                parameters.put("authorQueryParam", likeExpr(filter.getAuthorQuery()));
+            }
+            if (filter.getGenreQuery() != null && !filter.getGenreQuery().trim().isEmpty()) {
+                orConditions.add("lower(g.name) LIKE lower(:genreQueryParam)");
+                parameters.put("genreQueryParam", likeExpr(filter.getGenreQuery()));
             }
 
-            if (filter.getGenreId() != null) {
-                Join<Book, BookGenre> bookGenreJoin = root.join("bookGenreList");
-                Join<BookGenre, Genre> genreJoin = bookGenreJoin.join("genre");
-                predicates.add(cb.equal(genreJoin.get("id"), filter.getGenreId()));
+            if (!orConditions.isEmpty()) {
+                conditions.add("(" + String.join(" OR ", orConditions) + ")");
             }
 
-            if (filter.getPublisher() != null) {
-                predicates.add(cb.equal(root.get("publisher"), filter.getPublisher()));
+            if (filter.getPublisher() != null && !filter.getPublisher().trim().isEmpty()) {
+                conditions.add("lower(b.publisher) LIKE lower(:publisherParam)");
+                parameters.put("publisherParam", likeExpr(filter.getPublisher()));
             }
-
             if (filter.getYear() != null) {
-                predicates.add(cb.equal(root.get("year"), filter.getYear()));
+                conditions.add("b.year = :yearParam"); // b.year - это поле в Entity Book, а не year_of_publication
+                parameters.put("yearParam", filter.getYear());
             }
-
             if (filter.getPagesMin() != null) {
-                Long minPages = filter.getPagesMin() >= 0 ? filter.getPagesMin() : 0;
-                predicates.add(cb.ge(root.get("pages"), minPages));
+                conditions.add("b.pages >= :pagesMinParam");
+                parameters.put("pagesMinParam", filter.getPagesMin());
             }
-
             if (filter.getPagesMax() != null) {
-                Long maxPages = filter.getPagesMax() >= 0 ? filter.getPagesMax() : 0;
-                if (filter.getPagesMin() != null) {
-                    maxPages = maxPages > filter.getPagesMin() ? maxPages : filter.getPagesMin();
-                }
-                predicates.add(cb.le(root.get("pages"), maxPages));
+                conditions.add("b.pages <= :pagesMaxParam");
+                parameters.put("pagesMaxParam", filter.getPagesMax());
             }
-
             if (filter.getCoverType() != null) {
-                predicates.add(cb.equal(root.get("cover"), filter.getCoverType()));
+                conditions.add("b.cover = :coverTypeParam"); // b.cover - поле в Entity Book
+                parameters.put("coverTypeParam", filter.getCoverType());
+            }
+            // Если бы использовали authorId / genreId:
+            // if (filter.getAuthorId() != null) {
+            //     conditions.add("a.id = :authorIdParam");
+            //     parameters.put("authorIdParam", filter.getAuthorId());
+            // }
+            // if (filter.getGenreId() != null) {
+            //     conditions.add("g.id = :genreIdParam");
+            //     parameters.put("genreIdParam", filter.getGenreId());
+            // }
+
+
+            if (!conditions.isEmpty()) {
+                hql.append(" WHERE ").append(String.join(" AND ", conditions));
             }
 
-            query.select(root).where(predicates.toArray(new Predicate[0])).distinct(true);
+            // Добавим ORDER BY по названию по умолчанию, как в задании
+            hql.append(" ORDER BY b.title ASC");
 
-            return session.createQuery(query).getResultList();
+
+            Query<Book> query = session.createQuery(hql.toString(), Book.class);
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+            return query.list();
         }
     }
 
