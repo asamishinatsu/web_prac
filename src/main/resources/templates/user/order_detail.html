@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${order != null ? 'Книжный магазин - Заказ №' + order.id : 'Книжный магазин - Детали заказа'}">Книжный магазин - Детали заказа</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: mainHeader}"></div>
+<main class="container">
+    <div th:if="${order != null}">
+        <h1 th:text="'Детали заказа №' + ${order.id}">Детали заказа №123</h1>
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 5px;">
+            <h3>Общая информация о заказе:</h3>
+            <p><strong>Дата заказа:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm')}">01.01.2024 10:00</span></p>
+            <p><strong>Статус заказа:</strong> <span th:text="${order.status}">Processing</span></p>
+            <p><strong>Заказчик:</strong> <span th:text="${order.customer.fullName}">Иванов Иван</span></p>
+            <p><strong>Email:</strong> <span th:text="${order.customer.email}">ivan@example.com</span></p>
+            <p th:if="${order.customer.phone != null && !order.customer.phone.isEmpty()}"><strong>Телефон:</strong> <span th:text="${order.customer.phone}">+79991234567</span></p>
+            <p><strong>Адрес доставки:</strong> <span th:text="${order.deliveryAddress}">г. Москва, ул. Ленина, д. 1, кв. 1</span></p>
+            <p th:if="${order.deliveryTime != null}"><strong>Ожидаемое время доставки:</strong> <span th:text="${#temporals.format(order.deliveryTime, 'dd.MM.yyyy HH:mm')}">02.01.2024 14:00</span></p>
+            <h3 style="margin-top: 15px;">Итоговая сумма: <span style="color: #337ab7;" th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')} + ' руб.'">1000.00 руб.</span></h3>
+        </div>
+        <h3>Содержимое заказа:</h3>
+        <div th:if="${order.orderBookList != null && !order.orderBookList.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Наименование товара</th>
+                    <th>Цена за единицу (на момент заказа)</th>
+                    <th>Количество</th>
+                    <th>Сумма по позиции</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${order.orderBookList}">
+                    <td>
+                        <a th:href="@{/books/{id}(id=${item.book.id})}" th:text="${item.book.title}">Название книги</a>
+                    </td>
+                    <td th:text="${#numbers.formatDecimal(item.price, 1, 'COMMA', 2, 'POINT')} + ' руб.'">500.00 руб.</td>
+                    <td th:text="${item.quantity}">2</td>
+                    <td th:text="${#numbers.formatDecimal(item.price * item.quantity, 1, 'COMMA', 2, 'POINT')} + ' руб.'">1000.00 руб.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${order.orderBookList == null || order.orderBookList.isEmpty()}">
+            <p>В заказе нет товаров (это странно, стоит проверить логику).</p>
+        </div>
+        <div style="margin-top: 30px;">
+            <a th:href="@{/profile}" class="button">Вернуться в личный кабинет</a>
+        </div>
+    </div>
+    <div th:if="${order == null}">
+        <h1>Детали заказа</h1>
+        <p>Заказ не найден. Возможно, он был удален или указан неверный идентификатор, либо у вас нет прав на просмотр этого заказа.</p>
+        <p><a th:href="@{/profile}" class="button">Вернуться в личный кабинет</a></p>
+    </div>
+</main>
+</body>
+</html>

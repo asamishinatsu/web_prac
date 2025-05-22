@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книжный магазин - Каталог книг</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: mainHeader}"></div>
+<main class="container">
+    <h1>Каталог книг</h1>
+    <div class="filters-container">
+        <h3>Поиск и фильтры</h3>
+        <form th:action="@{/}" method="get">
+            <div class="filter-section">
+                <legend>Основные параметры поиска:</legend>
+                <div class="filter-fields-row">
+                    <div class="form-group">
+                        <label for="titleQuery">Название книги:</label>
+                        <input type="text" id="titleQuery" name="titleQuery" th:value="${titleQuery}">
+                    </div>
+                    <div class="form-group">
+                        <label for="authorQuery">Автор:</label>
+                        <input type="text" id="authorQuery" name="authorQuery" th:value="${authorQuery}">
+                    </div>
+                    <div class="form-group">
+                        <label for="genreQuery">Жанр:</label>
+                        <input type="text" id="genreQuery" name="genreQuery" th:value="${genreQuery}">
+                    </div>
+                </div>
+            </div>
+            <div class="filter-section">
+                <legend>Дополнительные фильтры:</legend>
+                <div class="filter-fields-row">
+                    <div class="form-group">
+                        <label for="publisher">Издательство:</label>
+                        <input type="text" id="publisher" name="publisher" th:value="${publisher}">
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Год издания:</label>
+                        <input type="number" id="year" name="year" th:value="${year}" min="1000" max="9999">
+                    </div>
+                </div>
+                <div class="filter-fields-row">
+                    <div class="form-group">
+                        <label for="pagesMin">Кол-во страниц (от):</label>
+                        <input type="number" id="pagesMin" name="pagesMin" th:value="${pagesMin}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="pagesMax">Кол-во страниц (до):</label>
+                        <input type="number" id="pagesMax" name="pagesMax" th:value="${pagesMax}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="coverType">Тип обложки:</label>
+                        <select id="coverType" name="coverType">
+                            <option value="">Любой</option>
+                            <option th:each="type : ${allCoverTypes}"
+                                    th:value="${type}"
+                                    th:text="${type}"
+                                    th:selected="${type == coverType}">Тип</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button type="submit" class="button">Поиск</button>
+                <a th:href="@{/}" class="button" style="margin-left: 10px; background-color: #777;">Сбросить</a>
+            </div>
+        </form>
+    </div>
+    <div th:if="${books != null && !books.isEmpty()}">
+        <h2>Найденные книги:</h2>
+        <ul class="book-list">
+            <li th:each="book : ${books}">
+                <div th:replace="~{fragments/book_card :: bookCard(book=${book})}"></div>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${books == null || books.isEmpty()}">
+        <p>Книги по вашему запросу не найдены. Попробуйте изменить параметры поиска или <a th:href="@{/}">сбросить фильтры</a>.</p>
+    </div>
+</main>
+</body>
+</html>

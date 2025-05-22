@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="book-card" th:fragment="bookCard(book)">
+    <div>
+        <h3 th:text="${book.title}">Название книги</h3>
+        <p>
+            <strong>Автор(ы):</strong>
+            <span th:if="${book.bookAuthorList != null && !book.bookAuthorList.isEmpty()}">
+                    <span th:each="bookAuthor, iterStat : ${book.bookAuthorList}">
+                        <span th:text="${bookAuthor.author.name}">Имя автора</span><th:block th:if="${!iterStat.last}">, </th:block>
+                    </span>
+                </span>
+            <span th:if="${book.bookAuthorList == null || book.bookAuthorList.isEmpty()}">Не указан</span>
+        </p>
+        <p>
+            <strong>Жанр(ы):</strong>
+            <span th:if="${book.bookGenreList != null && !book.bookGenreList.isEmpty()}">
+                    <span th:each="bookGenre, iterStat : ${book.bookGenreList}">
+                        <span th:text="${bookGenre.genre.name}">Название жанра</span><th:block th:if="${!iterStat.last}">, </th:block>
+                    </span>
+                </span>
+            <span th:if="${book.bookGenreList == null || book.bookGenreList.isEmpty()}">Не указан</span>
+        </p>
+        <p><strong>Цена:</strong> <span th:text="${#numbers.formatDecimal(book.price, 1, 'COMMA', 2, 'POINT')}">0.00</span> руб.</p>
+        <p th:if="${book.stock != null && book.stock > 0}"><strong>В наличии:</strong> <span th:text="${book.stock}">0</span> шт.</p>
+        <p th:if="${book.stock == null || book.stock <= 0}" style="color: red;">Нет в наличии</p>
+    </div>
+    <div class="actions">
+        <a th:href="@{/books/{id}(id=${book.id})}" class="button">Подробнее</a>
+        <form th:if="${book.stock != null && book.stock > 0}" th:action="@{/cart/add/{bookId}(bookId=${book.id})}" method="post" style="display: inline; margin-left: 10px;">
+            <button type="submit" class="button">В корзину</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книжный магазин - Личный кабинет</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: mainHeader}"></div>
+<main class="container">
+    <h1>Личный кабинет</h1>
+    <div th:if="${profileUpdateSuccess}" class="alert alert-success" th:text="${profileUpdateSuccess}"></div>
+    <div th:if="${profileUpdateError}" class="alert alert-danger" th:text="${profileUpdateError}"></div>
+    <div class="profile-section" style="margin-bottom: 30px;">
+        <h2>Мои данные</h2>
+        <form th:action="@{/profile/update}" method="post" th:object="${currentUser}">
+            <div class="form-group">
+                <label for="username">Логин:</label>
+                <input type="text" id="username" name="username" th:value="*{username}" readonly style="background-color: #eee;">
+            </div>
+            <div class="form-group">
+                <label for="fullName">ФИО:</label>
+                <input type="text" id="fullName" name="fullName" th:value="*{fullName}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" th:value="*{email}" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Телефон:</label>
+                <input type="text" id="phone" name="phone" th:value="*{phone}">
+            </div>
+            <div class="form-group">
+                <label for="address">Адрес:</label>
+                <textarea id="address" name="address" rows="3" th:text="*{address}"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="button">Сохранить изменения</button>
+            </div>
+        </form>
+    </div>
+    <div class="profile-section">
+        <h2>История заказов (последние 5)</h2>
+        <div th:if="${orders == null || orders.isEmpty()}">
+            <p>У вас пока нет заказов.</p>
+        </div>
+        <div th:if="${orders != null && !orders.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Номер заказа</th>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}">123</td>
+                    <td th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm')}">01.01.2024 10:00</td>
+                    <td th:text="${#numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')} + ' руб.'">1000.00 руб.</td>
+                    <td th:text="${order.status}">Processing</td>
+                    <td>
+                        <a th:href="@{/order/{orderId}(orderId=${order.id})}" class="button">Подробнее</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

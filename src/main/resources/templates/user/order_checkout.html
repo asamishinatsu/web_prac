@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книжный магазин - Оформление заказа</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: mainHeader}"></div>
+<main class="container">
+    <h1>Оформление заказа</h1>
+    <div th:if="${checkoutError}" class="alert alert-danger" th:text="${checkoutError}"></div>
+    <div th:if="${ (customerData != null || submittedFullName != null) && (cartItems != null && !cartItems.isEmpty())}">
+        <form th:action="@{/order/checkout}" method="post">
+            <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h2>Данные для доставки</h2>
+                    <p>Пожалуйста, проверьте и при необходимости измените ваши данные.</p>
+                    <div class="form-group">
+                        <label for="fullName">ФИО получателя:</label>
+                        <input type="text" id="fullName" name="fullName"
+                               th:value="${submittedFullName != null ? submittedFullName : (customerData != null ? customerData.fullName : '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email"
+                               th:value="${submittedEmail != null ? submittedEmail : (customerData != null ? customerData.email : '')}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон:</label>
+                        <input type="text" id="phone" name="phone"
+                               th:value="${submittedPhone != null ? submittedPhone : (customerData != null ? customerData.phone : '')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryAddress">Адрес доставки (обязательно):</label>
+                        <textarea id="deliveryAddress" name="deliveryAddress" rows="4" required th:text="${submittedDeliveryAddress != null ? submittedDeliveryAddress : (customerData != null ? customerData.address : '')}"></textarea>
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 300px; background-color: #f9f9f9; padding: 20px; border-radius: 5px;">
+                    <h2>Ваш заказ</h2>
+                    <div th:if="${cartItems != null && !cartItems.isEmpty()}">
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li th:each="item : ${cartItems}" style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span th:text="${item.book.title} + ' (x' + ${item.quantity} + ')'">Книга (x1)</span>
+                                    <span th:text="${#numbers.formatDecimal(item.book.price * item.quantity, 1, 'COMMA', 2, 'POINT')} + ' руб.'">0.00 руб.</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <hr>
+                        <h3 style="text-align: right;">
+                            Итого: <span th:text="${#numbers.formatDecimal(totalPrice, 1, 'COMMA', 2, 'POINT')} + ' руб.'">0.00 руб.</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 30px; text-align: center;" th:if="${cartItems != null && !cartItems.isEmpty()}">
+                <button type="submit" class="button" style="font-size: 1.2em; padding: 15px 30px;">Подтвердить и заказать</button>
+            </div>
+        </form>
+    </div>
+    <div th:if="${ !((customerData != null || submittedFullName != null) && (cartItems != null && !cartItems.isEmpty())) }" th:unless="${checkoutError}">
+        <p>Невозможно оформить заказ. Ваша корзина пуста или не удалось загрузить данные пользователя.</p>
+        <p><a th:href="@{/cart}" class="button">Вернуться в корзину</a></p>
+        <p><a th:href="@{/}" class="button">На главную</a></p>
+    </div>
+</main>
+</body>
+</html>
